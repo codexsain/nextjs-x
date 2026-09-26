@@ -30,4 +30,4 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 }
 
 
-// just cheackingggggggggggggggggg
+// just cheackinggggggggggggggggggxxxxxxxxxxxxxxxxxxxxxxxxx
