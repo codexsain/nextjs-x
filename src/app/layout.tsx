@@ -28,3 +28,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     </html>
   );
 }
+
+
+// just cheacking
