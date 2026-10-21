@@ -3,8 +3,8 @@
 import React, { useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Axios } from "axios";
-
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
 export default function signupPage() {
 
@@ -20,9 +20,35 @@ export default function signupPage() {
   })
 
   const [buttonDisabled, setButtonDisabled] = React.useState(true)
-
+  const [loading, setLoading] = React.useState(false)
 
   const onSignup = async () => {
+
+    try {
+
+      setLoading(true)
+
+      const response = await axios.post("/api/users/signup-b", user)
+
+      console.log("signup success", response.data)
+      router.push("/login")
+
+    }
+    catch (error: any) {
+      console.log("signup error", error)
+      toast.error(error.message)
+
+      if (error.response && error.response.data && error.response.data.error) {
+        console.log("Error status:", error.response.status); 
+        console.log("Error message from server:", error.response.data.error)
+      }
+
+    }
+    finally {
+      setLoading(false)
+
+    }
+
 
   }
 
@@ -116,7 +142,7 @@ export default function signupPage() {
                 : 'bg-black text-white hover:bg-gray-800 active:scale-[0.99] shadow-sm'
               }`}
           >
-           sign up
+            {loading ? "Loading..." : "Sign Up"}
           </button>
         </form>
 

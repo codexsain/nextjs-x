@@ -10,17 +10,15 @@ export async function POST(request: NextRequest) {
 
 
     try {
+
         const reqBody = await request.json()
         const { username, email, password } = await reqBody
-        console.log(reqBody)
-
+        // console.log(reqBody)
 
         if (
             [username, email, password].some((field) => field?.trim() === "")
-         ) {
-         
-         return NextResponse.json({ error: "all feilds are required" }, { status: 400 })
- 
+        ) {
+            return NextResponse.json({ error: "all feilds are required" }, { status: 400 })
 
         }
 
@@ -29,35 +27,24 @@ export async function POST(request: NextRequest) {
 
         // cheack if user already exists
         const userA = await User.findOne({ email })
-
+        
         if (userA) {
+            console.log("userA", userA)
             return NextResponse.json({ error: "user already exist" }, { status: 400 })
         }
 
 
 
-        async function hashPassword(password: string): Promise<string> {
-            // const saltRounds = bcrypt.genSalt(10);
-            const saltRounds = 10;
+        // const saltRounds = bcrypt.genSalt(10);
+        const saltRounds = 10;
+        var hashedPassword = await bcrypt.hash(password, saltRounds);
+        console.log('Hashed Password:', hashedPassword);
 
 
-            try {
-                const hashedPassword = await bcrypt.hash(password, saltRounds);
-                console.log('Hashed Password:', hashedPassword);
-                return hashedPassword;
-
-            } catch (error) {
-                console.error('Error hashing password:', error);
-                throw error;
-            }
-        }
-        await hashPassword(password)
-
-        console.log(hashPassword + "from function hash")
 
 
         const newUser = await new User({
-            password: hashPassword,
+            password: hashedPassword,
             email,
             username
         })
@@ -66,12 +53,12 @@ export async function POST(request: NextRequest) {
 
 
 
-       return NextResponse.json({
-        message: "user created successfully",
-        success : true,
-        saveUser
-       
-    })
+        return NextResponse.json({
+            message: "user created successfully",
+            success: true,
+            saveUser,
+
+        })
 
 
 
