@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef  } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -22,35 +22,34 @@ export default function signupPage() {
   const [buttonDisabled, setButtonDisabled] = React.useState(true)
   const [loading, setLoading] = React.useState(false)
 
-  const onSignup = async () => {
 
-    try {
+const onSignup = async (e:React.SyntheticEvent<HTMLFormElement>) => {
+  e.preventDefault();
 
-      setLoading(true)
+  try {
+    setLoading(true);
 
-      const response = await axios.post("/api/users/signup-b", user)
+    const response = await axios.post("/api/users/signup-b", user);
 
-      console.log("signup success", response.data)
-      router.push("/login")
+    console.log("Signup success:", response.data);
+    console.log("Redirecting to /login");
 
+    router.push("/login");
+  } catch (error: any) {
+    console.error("Signup error:", error.response.data.error);
+
+    if (error.response?.data?.error) {
+      toast.error(error.response.data.error);
+    } else {
+      toast.error(error.message || "Signup failed");
     }
-    catch (error: any) {
-      console.log("signup error", error)
-      toast.error(error.message)
-
-      if (error.response && error.response.data && error.response.data.error) {
-        console.log("Error status:", error.response.status); 
-        console.log("Error message from server:", error.response.data.error)
-      }
-
-    }
-    finally {
-      setLoading(false)
-
-    }
-
-
+  } finally {
+    setLoading(false);
   }
+};
+
+
+
 
 
   useEffect(() => {
@@ -81,7 +80,7 @@ export default function signupPage() {
           </p>
         </div>
 
-        <form className="space-y-5">
+        <form  onSubmit={onSignup} className="space-y-5">
 
           {/* Name */}
           <div>
@@ -133,7 +132,7 @@ export default function signupPage() {
 
           {/* Button */}
           <button
-            onClick={onSignup}
+            // onClick={onSignup}
             type="submit"
             disabled={buttonDisabled}
             className={`w-full rounded-lg py-3 text-sm font-medium transition-all duration-200 
@@ -144,6 +143,8 @@ export default function signupPage() {
           >
             {loading ? "Loading..." : "Sign Up"}
           </button>
+
+
         </form>
 
         <p className="text-center text-sm text-gray-500 mt-6">

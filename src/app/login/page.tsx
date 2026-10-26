@@ -16,7 +16,8 @@ export default function loginPage() {
   const [buttonDisabled, setButtonDisabled] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
 
-  const onLogin = async () => {
+  const onLogin = async (e: React.SyntheticEvent<HTMLFormElement>) => {
+  e.preventDefault();
 
     try {
       setLoading(true)
@@ -27,7 +28,7 @@ export default function loginPage() {
 
 
     } catch (error: any) {
-      console.log("login error", error.message)
+      console.log("login error", error.response.data.error )
     } finally {
       setLoading(false)
     }
@@ -60,7 +61,7 @@ export default function loginPage() {
           </p>
         </div>
 
-        <form className="space-y-5">
+        <form onSubmit={onLogin} className="space-y-5">
 
           {/* Name */}
 
@@ -97,7 +98,6 @@ export default function loginPage() {
 
           {/* Button */}
           <button
-            onClick={onLogin}
             disabled={buttonDisabled}
             type="submit"
             className={`w-full rounded-lg py-3 text-sm font-medium transition-all duration-200 
