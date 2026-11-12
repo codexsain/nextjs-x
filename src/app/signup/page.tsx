@@ -40,6 +40,7 @@ const onSignup = async (e:React.SyntheticEvent<HTMLFormElement>) => {
 
     if (error.response?.data?.error) {
       toast.error(error.response.data.error);
+      console.log(error.response.data.error);
     } else {
       toast.error(error.message || "Signup failed");
     }
